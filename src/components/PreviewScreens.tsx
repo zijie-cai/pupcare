@@ -213,7 +213,7 @@ function WalkLoggingScreen({ isCompact }: MobileScreenProps) {
       <motion.img
         key="mobile-one"
         initial={mobileMotion.initial}
-        animate={isCompact ? { ...mobileMotion.animate, scale: 1.26 } : { ...mobileMotion.animate, scale: 1.18 }}
+        animate={isCompact ? { ...mobileMotion.animate, scale: 1.34 } : { ...mobileMotion.animate, scale: 1.26 }}
         exit={mobileMotion.exit}
         transition={mobileTransition}
         src={mobile1}
@@ -231,7 +231,7 @@ function StreakRewardsScreen({ isCompact }: MobileScreenProps) {
       <motion.img
         key="mobile-two"
         initial={emphasisMotion.initial}
-        animate={isCompact ? { ...emphasisMotion.animate, scale: 1.24 } : { ...emphasisMotion.animate, scale: 1.16 }}
+        animate={isCompact ? { ...emphasisMotion.animate, scale: 1.26 } : { ...emphasisMotion.animate, scale: 1.18 }}
         exit={emphasisMotion.exit}
         transition={mobileTransition}
         src={mobile2}
@@ -249,7 +249,7 @@ function HealthNotesScreen({ isCompact }: MobileScreenProps) {
       <motion.img
         key="mobile-three"
         initial={emphasisMotion.initial}
-        animate={isCompact ? { ...emphasisMotion.animate, scale: 1.24 } : { ...emphasisMotion.animate, scale: 1.16 }}
+        animate={isCompact ? { ...emphasisMotion.animate, scale: 1.26 } : { ...emphasisMotion.animate, scale: 1.16 }}
         exit={emphasisMotion.exit}
         transition={mobileTransition}
         src={mobile3}
@@ -267,7 +267,7 @@ function MapFinderScreen({ isCompact }: MobileScreenProps) {
       <motion.img
         key="mobile-map"
         initial={mapMotion.initial}
-        animate={isCompact ? { ...mapMotion.animate, scale: 1.22 } : { ...mapMotion.animate, scale: 1.16 }}
+        animate={isCompact ? { ...mapMotion.animate, scale: 1.78 } : { ...mapMotion.animate, scale: 1.56 }}
         exit={mapMotion.exit}
         transition={mobileTransition}
         src={mobile4}
@@ -287,8 +287,8 @@ function ActivityScreen({ isCompact }: MobileScreenProps) {
         initial={emphasisMotion.initial}
         animate={
           isCompact
-            ? { ...emphasisMotion.animate, scale: 1.2 }
-            : { ...emphasisMotion.animate, scale: 1.16 }
+            ? { ...emphasisMotion.animate, scale: 1.26 }
+            : { ...emphasisMotion.animate, scale: 1.18 }
         }
         exit={emphasisMotion.exit}
         transition={mobileTransition}
@@ -375,7 +375,8 @@ function QuickWalkScreen() {
         <img
           src={watch1}
           alt="PupCare Apple Watch preview"
-          className="h-full w-full rounded-[18%] object-cover translate-x-[10%]"
+          className="h-full w-full rounded-[18%] object-cover"
+          style={{ transform: 'scale(1.03) translateX(1%)' }}
           loading="lazy"
         />
       </div>
@@ -421,7 +422,7 @@ function MapViewScreen() {
           src={watch4}
           alt="PupCare Apple Watch map preview"
           className="h-full w-full rounded-[18%] object-cover"
-          style={{ transform: 'scale(1.45)', transformOrigin: 'center' }}
+          style={{ transform: 'scale(1.55)', transformOrigin: 'center' }}
           loading="lazy"
         />
       </div>
@@ -437,6 +438,7 @@ function ActivitySummaryScreen() {
           src={watch5}
           alt="PupCare Apple Watch activity preview"
           className="h-full w-full rounded-[18%] object-cover"
+          style={{ transform: 'scale(1.06)' }}
           loading="lazy"
         />
       </div>
