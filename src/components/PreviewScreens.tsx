@@ -231,7 +231,7 @@ function StreakRewardsScreen({ isCompact }: MobileScreenProps) {
       <motion.img
         key="mobile-two"
         initial={emphasisMotion.initial}
-        animate={isCompact ? { ...emphasisMotion.animate, scale: 1.26 } : { ...emphasisMotion.animate, scale: 1.18 }}
+        animate={isCompact ? { ...emphasisMotion.animate, scale: 1.24 } : { ...emphasisMotion.animate, scale: 1.16 }}
         exit={emphasisMotion.exit}
         transition={mobileTransition}
         src={mobile2}
@@ -249,7 +249,7 @@ function HealthNotesScreen({ isCompact }: MobileScreenProps) {
       <motion.img
         key="mobile-three"
         initial={emphasisMotion.initial}
-        animate={isCompact ? { ...emphasisMotion.animate, scale: 1.26 } : { ...emphasisMotion.animate, scale: 1.16 }}
+        animate={isCompact ? { ...emphasisMotion.animate, scale: 1.28 } : { ...emphasisMotion.animate, scale: 1.16 }}
         exit={emphasisMotion.exit}
         transition={mobileTransition}
         src={mobile3}
@@ -267,7 +267,7 @@ function MapFinderScreen({ isCompact }: MobileScreenProps) {
       <motion.img
         key="mobile-map"
         initial={mapMotion.initial}
-        animate={isCompact ? { ...mapMotion.animate, scale: 1.78 } : { ...mapMotion.animate, scale: 1.56 }}
+        animate={isCompact ? { ...mapMotion.animate, scale: 1.42 } : { ...mapMotion.animate, scale: 1.3 }}
         exit={mapMotion.exit}
         transition={mobileTransition}
         src={mobile4}
