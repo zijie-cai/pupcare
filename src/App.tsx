@@ -600,7 +600,7 @@ export default function App() {
 
                   {/* Device Mockup Container - Fixed size to prevent shifting */}
                   <div className="relative w-44 sm:w-48 h-[22rem] sm:h-[24rem] flex items-center justify-center">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="sync" initial={false}>
                       {activeTab === 'iPhone' ? (
                         <motion.div
                           key="iphone"
@@ -643,11 +643,12 @@ export default function App() {
                             <AnimatePresence mode="wait">
                               <motion.div
                                 key={currentScreen}
-                                initial={{ opacity: 0, scale: 0.94, y: 12, filter: 'blur(10px)' }}
-                                animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
-                                exit={{ opacity: 0, scale: 0.94, y: -12, filter: 'blur(10px)' }}
-                                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                                initial={{ opacity: 0, scale: 0.9, y: 20, rotateX: -6, filter: 'blur(8px)' }}
+                                animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0, filter: 'blur(0px)' }}
+                                exit={{ opacity: 0, scale: 0.9, y: -20, rotateX: 6, filter: 'blur(8px)' }}
+                                transition={{ type: 'spring', stiffness: 240, damping: 26, mass: 0.9 }}
                                 className="absolute inset-0 p-1 will-change-transform"
+                                style={{ perspective: '1000px' }}
                               >
                                 <AppleWatchScreen screenIndex={currentScreen} />
                               </motion.div>

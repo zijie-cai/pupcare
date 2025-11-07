@@ -1,4 +1,5 @@
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
+import { useIsMobile } from './ui/use-mobile';
 import watch1 from '../watch-1.png';
 import watch2 from '../watch-2.png';
 import watch3 from '../watch-3.png';
@@ -14,17 +15,23 @@ interface ScreenProps {
   screenIndex: number;
 }
 
+interface MobileScreenProps {
+  isCompact: boolean;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                iPhone Screens                              */
 /* -------------------------------------------------------------------------- */
 
 export function IPhoneScreen({ screenIndex }: ScreenProps) {
+  const isCompact = useIsMobile();
+
   const screens = [
-    <WalkLoggingScreen key="walk" />,
-    <StreakRewardsScreen key="streak" />,
-    <HealthNotesScreen key="health" />,
-    <MapFinderScreen key="map" />,
-    <ActivityScreen key="activity" />,
+    <WalkLoggingScreen key="walk" isCompact={isCompact} />,
+    <StreakRewardsScreen key="streak" isCompact={isCompact} />,
+    <HealthNotesScreen key="health" isCompact={isCompact} />,
+    <MapFinderScreen key="map" isCompact={isCompact} />,
+    <ActivityScreen key="activity" isCompact={isCompact} />,
   ];
 
   return screens[screenIndex] || screens[0];
@@ -32,6 +39,7 @@ export function IPhoneScreen({ screenIndex }: ScreenProps) {
 
 const mobileTransition = { type: 'spring', stiffness: 190, damping: 28, mass: 0.8 };
 const exitTransition = { duration: 0.32, ease: [0.4, 0, 0.2, 1] };
+const watchTransition = { type: 'spring', stiffness: 240, damping: 28, mass: 0.85 };
 
 const mobileMotion = {
   initial: { opacity: 0, scale: 0.92, y: 22, rotateX: -4 },
@@ -51,13 +59,17 @@ const mapMotion = {
   exit: { opacity: 0, scale: 0.96, y: -18, rotateX: 3, transition: exitTransition },
 };
 
-function WalkLoggingScreen() {
+function WalkLoggingScreen({ isCompact }: MobileScreenProps) {
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[32px] border border-white/35 bg-gradient-to-br from-[#fdf3e3] via-[#f7e7d0] to-[#edd9bb] p-3 shadow-[0_18px_32px_rgba(34,70,51,0.12)]">
       <motion.img
         key="mobile-one"
         initial={mobileMotion.initial}
-        animate={mobileMotion.animate}
+        animate={
+          isCompact
+            ? { ...mobileMotion.animate, scale: (mobileMotion.animate.scale ?? 1) + 0.04 }
+            : mobileMotion.animate
+        }
         exit={mobileMotion.exit}
         transition={mobileTransition}
         src={mobile1}
@@ -69,13 +81,17 @@ function WalkLoggingScreen() {
   );
 }
 
-function StreakRewardsScreen() {
+function StreakRewardsScreen({ isCompact }: MobileScreenProps) {
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[32px] border border-white/35 bg-gradient-to-br from-[#f5e9ca] via-[#eddcb2] to-[#dbbf93] p-3 shadow-[0_18px_32px_rgba(36,70,49,0.18)]">
       <motion.img
         key="mobile-two"
         initial={emphasisMotion.initial}
-        animate={emphasisMotion.animate}
+        animate={
+          isCompact
+            ? { ...emphasisMotion.animate, scale: (emphasisMotion.animate.scale ?? 1) + 0.05 }
+            : emphasisMotion.animate
+        }
         exit={emphasisMotion.exit}
         transition={mobileTransition}
         src={mobile2}
@@ -87,13 +103,17 @@ function StreakRewardsScreen() {
   );
 }
 
-function HealthNotesScreen() {
+function HealthNotesScreen({ isCompact }: MobileScreenProps) {
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[32px] border border-white/35 bg-gradient-to-br from-[#f4ead0] via-[#ebdfbc] to-[#d8c49d] p-3 shadow-[0_18px_32px_rgba(33,69,48,0.16)]">
       <motion.img
         key="mobile-three"
         initial={emphasisMotion.initial}
-        animate={emphasisMotion.animate}
+        animate={
+          isCompact
+            ? { ...emphasisMotion.animate, scale: (emphasisMotion.animate.scale ?? 1) + 0.05 }
+            : emphasisMotion.animate
+        }
         exit={emphasisMotion.exit}
         transition={mobileTransition}
         src={mobile3}
@@ -105,13 +125,17 @@ function HealthNotesScreen() {
   );
 }
 
-function MapFinderScreen() {
+function MapFinderScreen({ isCompact }: MobileScreenProps) {
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[36px] border border-white/35 bg-gradient-to-br from-[#fdf3e3] via-[#f7e7d0] to-[#edd9bb] p-3 shadow-[0_18px_32px_rgba(34,70,51,0.15)]">
       <motion.img
         key="mobile-map"
         initial={mapMotion.initial}
-        animate={mapMotion.animate}
+        animate={
+          isCompact
+            ? { ...mapMotion.animate, scale: (mapMotion.animate.scale ?? 1) + 0.04 }
+            : mapMotion.animate
+        }
         exit={mapMotion.exit}
         transition={mobileTransition}
         src={mobile4}
@@ -123,13 +147,17 @@ function MapFinderScreen() {
   );
 }
 
-function ActivityScreen() {
+function ActivityScreen({ isCompact }: MobileScreenProps) {
   return (
     <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[32px] border border-white/35 bg-gradient-to-br from-[#FFF9F0] to-[#FFCC9E]/20 p-3 shadow-[0_18px_32px_rgba(38,76,55,0.16)]">
       <motion.img
         key="mobile-five"
         initial={emphasisMotion.initial}
-        animate={{ ...emphasisMotion.animate, scale: 1.18 }}
+        animate={
+          isCompact
+            ? { ...emphasisMotion.animate, scale: 1.22 }
+            : { ...emphasisMotion.animate, scale: 1.18 }
+        }
         exit={emphasisMotion.exit}
         transition={mobileTransition}
         src={mobile5}
@@ -146,6 +174,32 @@ function ActivityScreen() {
 /* -------------------------------------------------------------------------- */
 
 export function AppleWatchScreen({ screenIndex }: ScreenProps) {
+  const isCompact = useIsMobile();
+  const watchVariants = {
+    initial: {
+      opacity: 0,
+      scale: isCompact ? 0.88 : 0.94,
+      y: isCompact ? 16 : 10,
+      rotateX: -6,
+      filter: 'blur(8px)',
+    },
+    animate: {
+      opacity: 1,
+      scale: isCompact ? 1.08 : 1.02,
+      y: 0,
+      rotateX: 0,
+      filter: 'blur(0px)',
+    },
+    exit: {
+      opacity: 0,
+      scale: isCompact ? 0.9 : 0.94,
+      y: isCompact ? -16 : -10,
+      rotateX: 6,
+      filter: 'blur(6px)',
+      transition: exitTransition,
+    },
+  };
+
   const screens = [
     <QuickWalkScreen key="walk" />,
     <StreakDisplayScreen key="streak" />,
@@ -154,7 +208,25 @@ export function AppleWatchScreen({ screenIndex }: ScreenProps) {
     <ActivitySummaryScreen key="activity" />,
   ];
 
-  return screens[screenIndex] || screens[0];
+  return (
+    <AnimatePresence mode="sync" initial={false}>
+      <motion.div
+        key={screenIndex}
+        variants={watchVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={watchTransition}
+        className="h-full w-full"
+        style={{ perspective: '1200px' }}
+      >
+        <div className="relative h-full w-full">
+          <div className="pointer-events-none absolute inset-0 rounded-[25%] bg-gradient-to-br from-white/30 to-transparent blur-2xl" />
+          {screens[screenIndex] || screens[0]}
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
 }
 
 function QuickWalkScreen() {
