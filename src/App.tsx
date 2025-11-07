@@ -16,6 +16,7 @@ export default function App() {
   const [activeSection, setActiveSection] = useState<'landing' | 'preview' | 'founder'>('landing');
   const [activeTab, setActiveTab] = useState<'iPhone' | 'Apple Watch'>('iPhone');
   const [currentScreen, setCurrentScreen] = useState(0);
+  const [screenDirection, setScreenDirection] = useState<1 | -1>(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const activeErrorToastId = useRef<string | number | null>(null);
@@ -32,6 +33,27 @@ export default function App() {
   const pageAnimate = { opacity: 1, y: 0 };
   const pageExit = { opacity: 0, y: -14 };
   const pageTransition = { duration: 0.5, ease: [0.4, 0, 0.2, 1] };
+  const featureCardTransition = { type: 'spring', stiffness: 420, damping: 32, mass: 0.9 };
+  const featureCardVariants = {
+    enter: (direction: 1 | -1) => ({
+      opacity: 0,
+      x: direction === 1 ? 26 : -26,
+      scale: 0.96,
+      filter: 'blur(8px)',
+    }),
+    center: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      filter: 'blur(0px)',
+    },
+    exit: (direction: 1 | -1) => ({
+      opacity: 0,
+      x: direction === 1 ? -22 : 22,
+      scale: 0.96,
+      filter: 'blur(8px)',
+    }),
+  };
 
   const benefits = [
     { text: 'Smart walk & potty log', icon: Footprints, color: '#7BBF72' },
@@ -155,11 +177,22 @@ export default function App() {
   };
 
   const nextScreen = () => {
+    setScreenDirection(1);
     setCurrentScreen((prev) => (prev + 1) % screens.length);
   };
 
   const prevScreen = () => {
+    setScreenDirection(-1);
     setCurrentScreen((prev) => (prev - 1 + screens.length) % screens.length);
+  };
+
+  const jumpToScreen = (targetIndex: number) => {
+    if (targetIndex === currentScreen) return;
+    const total = screens.length;
+    const forwardSteps = (targetIndex - currentScreen + total) % total;
+    const backwardSteps = (currentScreen - targetIndex + total) % total;
+    setScreenDirection(forwardSteps <= backwardSteps ? 1 : -1);
+    setCurrentScreen(targetIndex);
   };
 
   return (
@@ -317,7 +350,7 @@ export default function App() {
                   {screens.map((_, index) => (
                     <button
                       key={index}
-                      onClick={() => setCurrentScreen(index)}
+                      onClick={() => jumpToScreen(index)}
                       className={`h-2 w-2 rounded-full transition-all duration-500 ${
                         index === currentScreen
                           ? 'bg-[#F6A43A] w-4 shadow-[0_2px_12px_rgba(246,164,58,0.4)]'
@@ -553,6 +586,7 @@ export default function App() {
                   <button
                     onClick={() => {
                       setActiveTab('iPhone');
+                      setScreenDirection(1);
                       setCurrentScreen(0);
                     }}
                     className={`relative z-10 px-6 py-2 rounded-full text-sm transition-colors duration-300 ${
@@ -567,6 +601,7 @@ export default function App() {
                   <button
                     onClick={() => {
                       setActiveTab('Apple Watch');
+                      setScreenDirection(1);
                       setCurrentScreen(0);
                     }}
                     className={`relative z-10 px-6 py-2 rounded-full text-sm transition-colors duration-300 ${
@@ -614,19 +649,7 @@ export default function App() {
                           
                           {/* Screen */}
                           <div className="relative h-full w-full overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#FFF9F0] to-[#FFCC9E]/30 sm:rounded-[2rem]">
-                            <AnimatePresence mode="wait">
-                              <motion.div
-                                key={currentScreen}
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -20 }}
-                                transition={{ duration: 0.3 }}
-                                className="absolute inset-0"
-                              >
-                                <IPhoneScreen screenIndex={currentScreen} />
-                              </motion.div>
-                            </AnimatePresence>
-
+                            <IPhoneScreen screenIndex={currentScreen} direction={screenDirection} />
                           </div>
                         </motion.div>
                       ) : (
@@ -646,11 +669,11 @@ export default function App() {
                                 initial={{ opacity: 0, scale: 0.9, y: 20, rotateX: -6, filter: 'blur(8px)' }}
                                 animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0, filter: 'blur(0px)' }}
                                 exit={{ opacity: 0, scale: 0.9, y: -20, rotateX: 6, filter: 'blur(8px)' }}
-                                transition={{ type: 'spring', stiffness: 240, damping: 26, mass: 0.9 }}
+                                transition={{ type: 'spring', stiffness: 520, damping: 30, mass: 0.78 }}
                                 className="absolute inset-0 p-1 will-change-transform"
                                 style={{ perspective: '1000px' }}
                               >
-                                <AppleWatchScreen screenIndex={currentScreen} />
+                                <AppleWatchScreen screenIndex={currentScreen} direction={screenDirection} />
                               </motion.div>
                             </AnimatePresence>
 
@@ -679,19 +702,21 @@ export default function App() {
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
+                  transition={{ duration: 0.45, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
                   className="flex justify-center w-full px-4"
                 >
                   {/* Static background shell - matches toggle exactly - FIXED WIDTH */}
-                  <div className="inline-flex items-center justify-center bg-white/25 backdrop-blur-xl rounded-full shadow-[0_8px_32px_0_rgba(123,191,114,0.12)] border border-white/40 px-4 sm:px-6 py-2 sm:py-2.5 w-[280px] sm:w-[320px] min-h-[52px] sm:min-h-[56px]">
-                    <AnimatePresence mode="wait">
+                  <div className="inline-flex items-center justify-center bg-white/25 backdrop-blur-xl rounded-full shadow-[0_8px_32px_0_rgba(123,191,114,0.12)] border border-white/40 px-4 sm:px-6 w-[280px] sm:w-[320px] h-[54px] sm:h-[58px]">
+                    <AnimatePresence mode="wait" initial={false} custom={screenDirection}>
                       <motion.div
                         key={currentScreen}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
-                        className="flex items-center justify-center gap-3 sm:gap-4"
+                        custom={screenDirection}
+                        variants={featureCardVariants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={featureCardTransition}
+                        className="flex items-center justify-center gap-3 sm:gap-4 w-full"
                       >
                         {(() => {
                           const benefit = benefits[currentScreen];
