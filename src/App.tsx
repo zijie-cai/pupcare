@@ -21,11 +21,13 @@ export default function App() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const activeErrorToastId = useRef<string | number | null>(null);
   const MIN_SUBMIT_ANIMATION = 1200;
+  const previewEnabled = false;
   const isLanding = activeSection === 'landing';
   const isFounder = activeSection === 'founder';
+  const isPreview = previewEnabled && activeSection === 'preview';
   const sectionPaddingTop = isLanding
     ? 'clamp(5rem, 10vh, 6.6rem)'
-    : activeSection === 'preview'
+    : isPreview
     ? 'clamp(1.6rem, 4.5vh, 2.8rem)'
     : 'clamp(4rem, 9.5vh, 5.4rem)';
   const sectionAlignment = 'sm:items-start';
@@ -242,12 +244,14 @@ export default function App() {
           <span className="text-lg tracking-tight">PupCare</span>
         </button>
         <nav className="flex items-center gap-4 sm:gap-6 text-sm text-[#24523B]/70">
-          <button 
-            onClick={() => setActiveSection('preview')}
-            className={`hover:text-[#F6A43A] transition-colors ${activeSection === 'preview' ? 'text-[#F6A43A]' : ''}`}
-          >
-            Preview
-          </button>
+          {previewEnabled && (
+            <button 
+              onClick={() => setActiveSection('preview')}
+              className={`hover:text-[#F6A43A] transition-colors ${isPreview ? 'text-[#F6A43A]' : ''}`}
+            >
+              Preview
+            </button>
+          )}
           <button 
             onClick={() => setActiveSection('founder')}
             className={`hover:text-[#F6A43A] transition-colors ${activeSection === 'founder' ? 'text-[#F6A43A]' : ''}`}
@@ -537,7 +541,7 @@ export default function App() {
           )}
 
           {/* Preview Page */}
-          {activeSection === 'preview' && (
+          {isPreview && (
             <motion.div
               key="preview"
               initial={pageInitial}
