@@ -1,13 +1,13 @@
 
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
-import pawsIcon from "./paws.png";
+import pupcareIcon from "./pupcare_icon.png";
 import "./index.css";
 
 const ensureFavicon = () => {
   const existing = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
   if (existing) {
-    existing.href = pawsIcon;
+    existing.href = pupcareIcon;
     existing.type = "image/png";
     return;
   }
@@ -15,7 +15,7 @@ const ensureFavicon = () => {
   const link = document.createElement("link");
   link.rel = "icon";
   link.type = "image/png";
-  link.href = pawsIcon;
+  link.href = pupcareIcon;
   document.head.appendChild(link);
 };
 

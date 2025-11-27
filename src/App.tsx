@@ -10,6 +10,7 @@ import { FirebaseError } from 'firebase/app';
 import { addToWaitlist } from './lib/waitlist';
 import { AppleWatchScreen, IPhoneScreen } from './components/PreviewScreens';
 import hanoImage from './hano.JPG';
+import pupcareIcon from './pupcare_icon.png';
 
 export default function App() {
   const [email, setEmail] = useState('');
@@ -240,7 +241,11 @@ export default function App() {
           onClick={() => setActiveSection('landing')}
           className={`flex items-center gap-2 hover:text-[#F6A43A] transition-colors ${activeSection === 'landing' ? 'text-[#F6A43A]' : 'text-[#24523B]/70'}`}
         >
-          <span className="text-3xl">🐾</span>
+          <img 
+            src={pupcareIcon} 
+            alt="PupCare icon" 
+            className="w-8 h-8 object-contain"
+          />
           <span className="text-lg tracking-tight">PupCare</span>
         </button>
         <nav className="flex items-center gap-4 sm:gap-6 text-sm text-[#24523B]/70">
