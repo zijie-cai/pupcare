@@ -1,0 +1,84 @@
+2025-11-26 22:40:35,671 DEBUG    root            Loaded Command Group: ['gcloud', 'functions']
+2025-11-26 22:40:35,673 DEBUG    root            Loaded Command Group: ['gcloud', 'functions', 'logs']
+2025-11-26 22:40:35,787 DEBUG    root            Loaded Command Group: ['gcloud', 'functions', 'logs', 'read']
+2025-11-26 22:40:35,788 DEBUG    root            Running [gcloud.functions.logs.read] with arguments: [--gen2: "true", --region: "us-central1", NAME: "sendWaitlistEmail"]
+2025-11-26 22:40:35,821 DEBUG    root            (gcloud.functions.logs.read) You do not currently have an active account selected.
+Please run:
+
+  $ gcloud auth login
+
+to obtain new credentials.
+
+If you have already logged in with a different account, run:
+
+  $ gcloud config set account ACCOUNT
+
+to select an already authenticated account to use.
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/calliope/cli.py", line 998, in Execute
+    resources = calliope_command.Run(cli=self, args=args)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/calliope/backend.py", line 838, in Run
+    resources = command_instance.Run(args)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/api_lib/functions/v1/util.py", line 387, in CatchHTTPErrorRaiseHTTPExceptionFn
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/surface/functions/logs/read.py", line 258, in Run
+    logging_common.FetchLogs(log_filter, order_by='DESC', limit=args.limit)
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/api_lib/logging/common.py", line 90, in FetchLogs
+    client = util.GetClient()
+             ^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/api_lib/logging/util.py", line 49, in GetClient
+    return core_apis.GetClientInstance('logging', DEFAULT_API_VERSION)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/api_lib/util/apis.py", line 282, in GetClientInstance
+    return apis_internal._GetClientInstance(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/api_lib/util/apis_internal.py", line 169, in _GetClientInstance
+    http_client = transports.GetApitoolsTransport(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/credentials/transports.py", line 80, in GetApitoolsTransport
+    session = requests.GetSession(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/credentials/requests.py", line 82, in GetSession
+    session = request_wrapper.WrapQuota(session, enable_resource_quota,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/credentials/requests.py", line 127, in WrapQuota
+    quota_project = self.QuotaProject(enable_resource_quota,
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/credentials/transport.py", line 54, in QuotaProject
+    creds = store.LoadIfEnabled(allow_account_impersonation, use_google_auth)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/credentials/store.py", line 635, in LoadIfEnabled
+    return Load(
+           ^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/credentials/store.py", line 874, in Load
+    cred = _Load(
+           ^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/credentials/store.py", line 1053, in _Load
+    raise creds_exceptions.NoActiveAccountException(
+googlecloudsdk.core.credentials.exceptions.NoActiveAccountException: You do not currently have an active account selected.
+Please run:
+
+  $ gcloud auth login
+
+to obtain new credentials.
+
+If you have already logged in with a different account, run:
+
+  $ gcloud config set account ACCOUNT
+
+to select an already authenticated account to use.
+2025-11-26 22:40:35,823 ERROR    root            (gcloud.functions.logs.read) You do not currently have an active account selected.
+Please run:
+
+  $ gcloud auth login
+
+to obtain new credentials.
+
+If you have already logged in with a different account, run:
+
+  $ gcloud config set account ACCOUNT
+
+to select an already authenticated account to use.

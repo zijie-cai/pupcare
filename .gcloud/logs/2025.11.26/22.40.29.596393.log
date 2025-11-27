@@ -1,0 +1,58 @@
+2025-11-26 22:40:29,612 DEBUG    root            Loaded Command Group: ['gcloud', 'functions']
+2025-11-26 22:40:29,614 DEBUG    root            Loaded Command Group: ['gcloud', 'functions', 'logs']
+2025-11-26 22:40:29,730 DEBUG    root            Loaded Command Group: ['gcloud', 'functions', 'logs', 'read']
+2025-11-26 22:40:29,737 DEBUG    root            Running [gcloud.functions.logs.read] with arguments: [--gen2: "true", --region: "us-central1", NAME: "sendWaitlistEmail"]
+2025-11-26 22:40:29,737 DEBUG    root            (gcloud.functions.logs.read) The required property [project] is not currently set.
+It can be set on a per-command basis by re-running your command with the [--project] flag.
+
+You may set it for your current workspace by running:
+
+  $ gcloud config set project VALUE
+
+or it can be set temporarily by the environment variable [CLOUDSDK_CORE_PROJECT]
+Traceback (most recent call last):
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/calliope/cli.py", line 998, in Execute
+    resources = calliope_command.Run(cli=self, args=args)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/calliope/backend.py", line 838, in Run
+    resources = command_instance.Run(args)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/api_lib/functions/v1/util.py", line 387, in CatchHTTPErrorRaiseHTTPExceptionFn
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/surface/functions/logs/read.py", line 256, in Run
+    log_filter = _CreateLogFilter(args)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/surface/functions/logs/read.py", line 99, in _CreateLogFilter
+    function_ref = _GetFunctionRef(args.name)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/surface/functions/logs/read.py", line 48, in _GetFunctionRef
+    'projectsId': properties.VALUES.core.project.GetOrFail(),
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/properties.py", line 4074, in GetOrFail
+    return self.Get(required=True)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/properties.py", line 4090, in Get
+    property_value = self.GetPropertyValue(required, validate)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/properties.py", line 4109, in GetPropertyValue
+    property_value = _GetProperty(self,
+                     ^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Caskroom/google-cloud-sdk/491.0.0/google-cloud-sdk/lib/googlecloudsdk/core/properties.py", line 4442, in _GetProperty
+    raise RequiredPropertyError(prop, flag=flag_to_use)
+googlecloudsdk.core.properties.RequiredPropertyError: The required property [project] is not currently set.
+It can be set on a per-command basis by re-running your command with the [--project] flag.
+
+You may set it for your current workspace by running:
+
+  $ gcloud config set project VALUE
+
+or it can be set temporarily by the environment variable [CLOUDSDK_CORE_PROJECT]
+2025-11-26 22:40:29,740 ERROR    root            (gcloud.functions.logs.read) The required property [project] is not currently set.
+It can be set on a per-command basis by re-running your command with the [--project] flag.
+
+You may set it for your current workspace by running:
+
+  $ gcloud config set project VALUE
+
+or it can be set temporarily by the environment variable [CLOUDSDK_CORE_PROJECT]
