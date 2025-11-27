@@ -56,7 +56,7 @@ const transportOptions = mailSettings.host
 const transporter = nodemailer.createTransport(transportOptions);
 
 const buildMailBody = (email: string) => {
-  const downloadUrl = 'https://testflight.apple.com/join/NXA75kXz';
+  const downloadUrl = 'https://testflight.apple.com/join/WB7EH4dm';
 
   const textBody = [
     'Hi there,',
