@@ -11,6 +11,7 @@ import { addToWaitlist } from './lib/waitlist';
 import { AppleWatchScreen, IPhoneScreen } from './components/PreviewScreens';
 import hanoImage from './hano.JPG';
 import pupcareIcon from './pupcare_icon.png';
+import appStoreBadge from './appstore.svg';
 
 export default function App() {
   const [email, setEmail] = useState('');
@@ -22,7 +23,9 @@ export default function App() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const activeErrorToastId = useRef<string | number | null>(null);
   const MIN_SUBMIT_ANIMATION = 1200;
+  const TESTFLIGHT_URL = 'https://testflight.apple.com/join/WB7EH4dm';
   const previewEnabled = false;
+  const waitlistEnabled = false;
   const isLanding = activeSection === 'landing';
   const isFounder = activeSection === 'founder';
   const isPreview = previewEnabled && activeSection === 'preview';
@@ -179,6 +182,10 @@ export default function App() {
     }
   };
 
+  const handleOpenTestFlight = () => {
+    window.open(TESTFLIGHT_URL, '_blank', 'noopener,noreferrer');
+  };
+
   const nextScreen = () => {
     setScreenDirection(1);
     setCurrentScreen((prev) => (prev + 1) % screens.length);
@@ -298,7 +305,7 @@ export default function App() {
               </motion.div>
 
               <div className="space-y-5 sm:space-y-6 lg:space-y-7">
-                {/* Coming Soon - Gradient Text */}
+                {/* Public Beta - Gradient Text */}
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -307,7 +314,7 @@ export default function App() {
                 >
                   <h1 className="text-[5rem] sm:text-[5rem] md:text-[6rem] lg:text-[7rem] tracking-tight leading-tight px-2 font-bold">
                     <span className="inline-block bg-gradient-to-r from-[#7BBF72] via-[#F6A43A] to-[#FFCC9E] bg-clip-text text-transparent">
-                      Coming Soon
+                      Public Beta
                     </span>
                   </h1>
                   
@@ -344,12 +351,12 @@ export default function App() {
                       
                       {/* Subtle hint text */}
                       <motion.p
-                        className="text-xs sm:text-sm text-[#24523B]/40 italic"
+                        className="text-sm sm:text-base text-[#24523B]/70 font-semibold tracking-tight"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.8, delay: 0.9 }}
                       >
-                        Your pup's journey, all in one place
+                        Your pup's life, all in one app.
                       </motion.p>
                     </div>
                   </motion.div>
@@ -370,12 +377,13 @@ export default function App() {
                 </div>
 
                 {/* Email signup - Liquid Glass - Redesigned for Mobile */}
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="space-y-2 sm:space-y-3 max-w-xl mx-auto w-full"
-                >
+                {waitlistEnabled && (
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    className="space-y-2 sm:space-y-3 max-w-xl mx-auto w-full"
+                  >
                   {/* Stacked layout optimized for mobile */}
                   <div className="space-y-2 w-full">
                     <motion.div 
@@ -533,14 +541,27 @@ export default function App() {
                       </div>
                     </motion.button>
                   </div>
-                  <div className="w-full text-center">
-                    <p className="text-xs sm:text-sm text-[#24523B]/50 flex items-center justify-center gap-2">
-                      <span>•</span>
-                      <span>✦ Be the first to know when we launch ✦</span>
-                      <span>•</span>
-                    </p>
-                  </div>
                 </motion.div>
+                )}
+
+                <div className="w-full flex flex-col items-center mt-2 sm:mt-3 gap-3">
+                  <motion.button
+                    type="button"
+                    onClick={handleOpenTestFlight}
+                    whileTap={{ scale: 0.96 }}
+                    transition={{ type: "spring", stiffness: 320, damping: 28 }}
+                    className="focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F6A43A] rounded-xl"
+                  >
+                    <img
+                      src={appStoreBadge}
+                      alt="Download on the App Store"
+                      className="h-12 sm:h-14 w-auto pointer-events-none"
+                    />
+                  </motion.button>
+                  <p className="text-xs sm:text-sm text-[#24523B]/50 flex items-center justify-center gap-2">
+                    <span>✦ Version 1.0.0 • iOS 13+ ✦</span>
+                  </p>
+                </div>
               </div>
             </motion.div>
           )}
