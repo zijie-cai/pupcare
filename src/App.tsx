@@ -499,7 +499,7 @@ export default function App() {
                   {/* Tagline - Dramatic Redesign */}
                   <motion.div 
                     className="relative max-w-2xl mx-auto px-4"
-                    initial={{ opacity: 0, ...axisOffset(5) }}
+                    initial={{ opacity: 0, ...axisOffset(-5) }}
                     animate={{ opacity: 1, ...axisOffset(0) }}
                     transition={{ ...elementTransition, delay: 0.11 }}
                   >
@@ -510,7 +510,7 @@ export default function App() {
                       {/* Main dramatic text */}
                       <motion.p 
                         className="text-xl sm:text-2xl md:text-3xl tracking-tight leading-tight"
-                        initial={{ opacity: 0, ...axisOffset(5) }}
+                        initial={{ opacity: 0, ...axisOffset(-5) }}
                         animate={{ opacity: 1, ...axisOffset(0) }}
                         transition={{ ...elementTransition, delay: 0.16 }}
                       >
@@ -530,7 +530,7 @@ export default function App() {
                       {/* Subtle hint text */}
                       <motion.p
                         className="text-sm sm:text-base text-[#24523B]/70 font-semibold tracking-tight"
-                        initial={{ opacity: 0, ...axisOffset(4) }}
+                        initial={{ opacity: 0, ...axisOffset(-4) }}
                         animate={{ opacity: 1, ...axisOffset(0) }}
                         transition={{ ...elementTransition, delay: 0.22 }}
                       >
