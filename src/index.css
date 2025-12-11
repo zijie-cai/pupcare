@@ -178,36 +178,62 @@
     border-width: 0;
   }
 
-  .scroll-indicator {
-    position: fixed;
-    right: clamp(12px, 3vw, 32px);
-    top: 50%;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    pointer-events: none;
-    z-index: 30;
-    gap: 0.5rem;
-    transform: translateY(-50%);
-  }
+.scroll-indicator {
+  position: fixed;
+  right: clamp(10px, 6vw, 36px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + clamp(4px, 3vh, 22px));
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  pointer-events: auto;
+  z-index: 30;
+  gap: 0.6rem;
+  transform: none;
+}
 
-  .scroll-indicator__stack {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-  }
+.scroll-indicator__stack {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.scroll-indicator__button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scroll-indicator__button:disabled {
+  cursor: default;
+}
 
   .scroll-indicator__dot {
     width: 8px;
     background: rgba(36, 82, 59, 0.14);
   }
 
-  @media (width >= 48rem) {
-    .scroll-indicator {
-      display: flex;
-    }
+@media (min-width: 48rem) {
+  .scroll-indicator {
+    right: clamp(12px, 3vw, 32px);
+    top: 50%;
+    left: auto;
+    bottom: auto;
+    flex-direction: column;
+    gap: 0.5rem;
+    transform: translateY(-50%);
   }
+
+  .scroll-indicator__stack {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
 
   hr {
     height: 0;
