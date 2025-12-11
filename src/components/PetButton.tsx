@@ -118,9 +118,9 @@ export function PetButton({ imageSrc, imageAlt }: PetButtonProps) {
 
       {/* Gender Indicator - Static Label */}
       <motion.div
-        initial={{ scale: 0, opacity: 0 }}
+        initial={{ scale: 0.75, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.4, type: "spring", stiffness: 300 }}
+        transition={{ duration: 0.25, delay: 0.15, type: "spring", stiffness: 420, damping: 26 }}
         className="absolute -bottom-1.5 -right-1.5 w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center shadow-[0_8px_32px_0_rgba(236,72,153,0.3)] border-3 border-white/70 z-20 bg-gradient-to-br from-pink-400 via-pink-500 to-rose-500"
       >
         <span className="text-xl sm:text-2xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.2)]">

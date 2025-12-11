@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type TouchEvent, type WheelEvent } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Check, Apple, Mail, Heart, ChevronLeft, ChevronRight, Footprints, Award, FileHeart, MapPin, Bell, Sparkles, Bone, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Button } from './components/ui/button';
@@ -22,23 +22,39 @@ export default function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const activeErrorToastId = useRef<string | number | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const lastSwipeTimeRef = useRef(0);
   const MIN_SUBMIT_ANIMATION = 1200;
+  const SWIPE_THRESHOLD = 50;
+  const WHEEL_THRESHOLD = 20;
+  const WHEEL_COOLDOWN = 600;
   const TESTFLIGHT_URL = 'https://testflight.apple.com/join/WB7EH4dm';
   const previewEnabled = false;
   const waitlistEnabled = false;
   const isLanding = activeSection === 'landing';
   const isFounder = activeSection === 'founder';
   const isPreview = previewEnabled && activeSection === 'preview';
+  const availableSections: ('landing' | 'preview' | 'founder')[] = previewEnabled
+    ? ['landing', 'preview', 'founder']
+    : ['landing', 'founder'];
+  const sectionDisplayNames: Record<'landing' | 'preview' | 'founder', string> = {
+    landing: 'Welcome',
+    preview: 'Preview',
+    founder: 'Founder',
+  };
+  const totalSections = availableSections.length;
   const sectionPaddingTop = isLanding
     ? 'clamp(5rem, 10vh, 6.6rem)'
     : isPreview
     ? 'clamp(1.6rem, 4.5vh, 2.8rem)'
     : 'clamp(4rem, 9.5vh, 5.4rem)';
   const sectionAlignment = 'sm:items-start';
-  const pageInitial = { opacity: 0, y: 14 };
-  const pageAnimate = { opacity: 1, y: 0 };
-  const pageExit = { opacity: 0, y: -14 };
-  const pageTransition = { duration: 0.5, ease: [0.4, 0, 0.2, 1] };
+  const smoothEase = [0.36, 0, 0.2, 1] as const;
+  const pageInitial = { opacity: 0, y: 10, filter: 'blur(8px)' };
+  const pageAnimate = { opacity: 1, y: 0, filter: 'blur(0px)' };
+  const pageExit = { opacity: 0, y: -10, filter: 'blur(6px)' };
+  const pageTransition = { duration: 0.32, ease: smoothEase };
+  const elementTransition = { duration: 0.28, ease: smoothEase };
   const featureCardTransition = { type: 'spring', stiffness: 420, damping: 32, mass: 0.9 };
   const featureCardVariants = {
     enter: (direction: 1 | -1) => ({
@@ -205,6 +221,59 @@ export default function App() {
     setCurrentScreen(targetIndex);
   };
 
+  const handleSectionSwipe = (direction: 'left' | 'right') => {
+    const currentIndex = availableSections.indexOf(activeSection);
+    if (currentIndex === -1 || availableSections.length <= 1) return;
+
+    const isFirst = currentIndex === 0;
+    const isLast = currentIndex === availableSections.length - 1;
+
+    if ((direction === 'right' && isFirst) || (direction === 'left' && isLast)) {
+      return;
+    }
+
+    const nextIndex = direction === 'left' ? currentIndex + 1 : currentIndex - 1;
+    setActiveSection(availableSections[nextIndex]);
+  };
+
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    if (event.touches.length !== 1) return;
+    const touch = event.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    if (!touchStartRef.current) return;
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - touchStartRef.current.x;
+    const deltaY = touch.clientY - touchStartRef.current.y;
+    touchStartRef.current = null;
+
+    if (Math.abs(deltaX) <= Math.abs(deltaY) || Math.abs(deltaX) < SWIPE_THRESHOLD) {
+      return;
+    }
+
+    handleSectionSwipe(deltaX > 0 ? 'right' : 'left');
+  };
+
+  const handleTouchCancel = () => {
+    touchStartRef.current = null;
+  };
+
+  const handleWheel = (event: WheelEvent<HTMLDivElement>) => {
+    if (Math.abs(event.deltaY) < WHEEL_THRESHOLD) {
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastSwipeTimeRef.current < WHEEL_COOLDOWN) {
+      return;
+    }
+
+    lastSwipeTimeRef.current = now;
+    handleSectionSwipe(event.deltaY > 0 ? 'left' : 'right');
+  };
+
   return (
     <>
       <Toaster 
@@ -221,9 +290,14 @@ export default function App() {
       <div
         className={`relative w-full h-screen ${
           isLanding
-            ? 'overflow-y-auto sm:overflow-hidden snap-y snap-mandatory scroll-smooth sm:snap-none'
-            : 'overflow-y-auto overflow-x-hidden'
+            ? 'overflow-hidden sm:overflow-hidden snap-y snap-mandatory scroll-smooth sm:snap-none'
+            : 'overflow-hidden overflow-x-hidden'
         }`}
+        style={{ touchAction: 'pan-x' }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
+        onWheel={handleWheel}
       >
         {/* Animated gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#FFF9F0] via-[#FFF5E8] to-[#FFEDD5]">
@@ -236,12 +310,49 @@ export default function App() {
 
       {/* Paw Trail Animation */}
       <PawTrail />
+      
+      {/* Minimal scroll indicator */}
+      {totalSections > 1 && (
+        <aside className="scroll-indicator">
+          <div className="scroll-indicator__stack">
+            {availableSections.map((section) => {
+              const isActive = section === activeSection;
+              return (
+                <motion.span
+                  key={section}
+                  className="scroll-indicator__dot"
+                  initial={false}
+                  animate={{
+                    height: isActive ? 30 : 8,
+                    borderRadius: isActive ? 9999 : 9999,
+                    backgroundColor: isActive ? '#24523B' : 'rgba(36,82,59,0.18)',
+                    opacity: isActive ? 1 : 0.6,
+                    boxShadow: isActive
+                      ? '0 14px 30px rgba(36,82,59,0.3)'
+                      : 'inset 0 0 0 1px rgba(255,255,255,0.4)',
+                  }}
+                  transition={{
+                    height: { type: 'spring', stiffness: 440, damping: 34 },
+                    backgroundColor: { duration: 0.25 },
+                    opacity: { duration: 0.25 },
+                    boxShadow: { duration: 0.25 },
+                  }}
+                  aria-hidden="true"
+                />
+              );
+            })}
+          </div>
+          <span className="sr-only" aria-live="polite">
+            Viewing {sectionDisplayNames[activeSection]}
+          </span>
+        </aside>
+      )}
 
       {/* Header */}
       <motion.header 
-        initial={{ y: -16, opacity: 0, filter: 'blur(8px)' }}
+        initial={{ y: -12, opacity: 0, filter: 'blur(10px)' }}
         animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
-        transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+        transition={elementTransition}
         className="relative z-10 flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16"
       >
         <button 
@@ -295,9 +406,9 @@ export default function App() {
               style={{ willChange: 'opacity, transform' }}
             >
               <motion.div
-                initial={{ opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: -6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
+                transition={{ ...elementTransition, delay: 0.04 }}
                 className="sm:hidden mb-4 text-[#24523B]/60 flex justify-center"
                 style={{ fontSize: '0.75rem' }}
               >
@@ -307,9 +418,9 @@ export default function App() {
               <div className="space-y-5 sm:space-y-6 lg:space-y-7">
                 {/* Public Beta - Gradient Text */}
                 <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
+                  initial={{ scale: 0.985, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.7, delay: 0.2 }}
+                  transition={{ ...elementTransition, delay: 0.07 }}
                   className="space-y-3 sm:space-y-4"
                 >
                   <h1 className="text-[5rem] sm:text-[5rem] md:text-[6rem] lg:text-[7rem] tracking-tight leading-tight px-2 font-bold">
@@ -321,9 +432,9 @@ export default function App() {
                   {/* Tagline - Dramatic Redesign */}
                   <motion.div 
                     className="relative max-w-2xl mx-auto px-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1, delay: 0.5 }}
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ ...elementTransition, delay: 0.11 }}
                   >
                     {/* Glowing background effect */}
                     <div className="absolute inset-0 bg-gradient-to-r from-[#7BBF72]/10 via-[#F6A43A]/10 to-[#FFCC9E]/10 blur-3xl rounded-full" />
@@ -332,9 +443,9 @@ export default function App() {
                       {/* Main dramatic text */}
                       <motion.p 
                         className="text-xl sm:text-2xl md:text-3xl tracking-tight leading-tight"
-                        initial={{ opacity: 0, y: 10 }}
+                        initial={{ opacity: 0, y: 5 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.6 }}
+                        transition={{ ...elementTransition, delay: 0.16 }}
                       >
                         <span className="bg-gradient-to-r from-[#24523B] via-[#24523B]/90 to-[#24523B]/70 bg-clip-text text-transparent">
                           Every moment.
@@ -352,9 +463,9 @@ export default function App() {
                       {/* Subtle hint text */}
                       <motion.p
                         className="text-sm sm:text-base text-[#24523B]/70 font-semibold tracking-tight"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.8, delay: 0.9 }}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ ...elementTransition, delay: 0.22 }}
                       >
                         Your pup's life, all in one app.
                       </motion.p>
@@ -779,19 +890,19 @@ export default function App() {
             <motion.div
               key="founder"
               layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+              initial={pageInitial}
+              animate={pageAnimate}
+              exit={pageExit}
+              transition={pageTransition}
               className="w-full max-w-3xl mx-auto"
             >
               <div className="flex flex-col items-center text-center space-y-5 sm:space-y-6">
                 
                 {/* Dog Image with Pet Interaction */}
                 <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
+                  initial={{ scale: 0.97, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
+                  transition={{ ...elementTransition, delay: 0.06 }}
                 >
                     <PetButton 
                       imageSrc={hanoImage}
@@ -801,17 +912,35 @@ export default function App() {
 
                 {/* Content */}
                 <motion.div
-                  initial={{ y: 20, opacity: 0 }}
+                  initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
+                  transition={{ ...elementTransition, delay: 0.1 }}
                   className="max-w-xl space-y-4 sm:space-y-5"
                 >
                   <div className="space-y-2">
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl text-[#24523B] tracking-tight flex items-center justify-center gap-2 sm:gap-3">
+                    <motion.h2
+                      className="text-2xl sm:text-3xl lg:text-4xl text-[#24523B] tracking-tight flex items-center justify-center gap-2 sm:gap-3"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ ...elementTransition, delay: 0.14 }}
+                    >
                       <span>Built with</span>
-                      <Heart className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-red-500 fill-red-500" />
-                    </h2>
-                    <p className="text-base sm:text-lg text-[#F6A43A]">for dog parents, by a dog parent</p>
+                      <motion.span
+                        initial={{ scale: 0.92, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ type: 'spring', stiffness: 520, damping: 28, delay: 0.16 }}
+                      >
+                        <Heart className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-red-500 fill-red-500" />
+                      </motion.span>
+                    </motion.h2>
+                    <motion.p
+                      className="text-base sm:text-lg text-[#F6A43A]"
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ ...elementTransition, delay: 0.18 }}
+                    >
+                      for dog parents, by a dog parent
+                    </motion.p>
                   </div>
 
                   <div className="space-y-3 text-[#24523B]/70 text-xs sm:text-sm max-w-lg mx-auto founder-copy">
@@ -828,9 +957,9 @@ export default function App() {
 
                   {/* Buy Me a Treat Button - Liquid Glass */}
                   <motion.div
-                    initial={{ y: 10, opacity: 0 }}
+                    initial={{ y: 6, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
+                    transition={{ ...elementTransition, delay: 0.2 }}
                     className="pt-1"
                   >
                     <motion.button 
@@ -854,7 +983,7 @@ export default function App() {
         </AnimatePresence>
       </motion.div>
 
-      <style jsx>{`
+      <style>{`
         @keyframes blob {
           0%, 100% { transform: translate(0, 0) scale(1); }
           33% { transform: translate(30px, -50px) scale(1.1); }
@@ -887,7 +1016,7 @@ export default function App() {
           animation-delay: 4s;
         }
       `}</style>
-      </div>
-    </>
+    </div>
+  </>
   );
 }

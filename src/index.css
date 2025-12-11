@@ -157,13 +157,56 @@
     line-height: inherit;
     height: 100%;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
     touch-action: pan-y;
     background-color: #FFF5E8;
   }
 
   #root {
     height: 100%;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .scroll-indicator {
+    position: fixed;
+    right: clamp(12px, 3vw, 32px);
+    top: 50%;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    z-index: 30;
+    gap: 0.5rem;
+    transform: translateY(-50%);
+  }
+
+  .scroll-indicator__stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .scroll-indicator__dot {
+    width: 8px;
+    background: rgba(36, 82, 59, 0.14);
+  }
+
+  @media (width >= 48rem) {
+    .scroll-indicator {
+      display: flex;
+    }
   }
 
   hr {
@@ -2668,4 +2711,3 @@ html {
 .animate-paw-step {
   animation: pawStep 1.2s ease-in-out forwards;
 }
-
