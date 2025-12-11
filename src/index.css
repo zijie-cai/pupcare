@@ -218,7 +218,7 @@
     background: rgba(36, 82, 59, 0.14);
   }
 
-@media (min-width: 48rem) {
+@media (min-width: 394px) {
   .scroll-indicator {
     right: clamp(12px, 3vw, 32px);
     top: 50%;

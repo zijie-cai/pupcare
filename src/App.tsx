@@ -13,6 +13,8 @@ import hanoImage from './hano.JPG';
 import pupcareIcon from './pupcare_icon.png';
 import appStoreBadge from './appstore.svg';
 
+const MOBILE_VIEWPORT_QUERY = '(max-width: 393px)';
+
 export default function App() {
   const [email, setEmail] = useState('');
   type SectionKey = 'landing' | 'preview' | 'founder';
@@ -40,7 +42,7 @@ export default function App() {
     : ['landing', 'founder'];
   const [isMobileViewport, setIsMobileViewport] = useState(() => {
     if (typeof window === 'undefined') return false;
-    return window.matchMedia('(max-width: 47.99rem)').matches;
+    return window.matchMedia(MOBILE_VIEWPORT_QUERY).matches;
   });
   const sectionDisplayNames: Record<SectionKey, string> = {
     landing: 'Welcome',
@@ -113,7 +115,7 @@ export default function App() {
   useEffect(() => {
     const updateViewport = () => {
       if (typeof window === 'undefined') return;
-      setIsMobileViewport(window.matchMedia('(max-width: 47.99rem)').matches);
+      setIsMobileViewport(window.matchMedia(MOBILE_VIEWPORT_QUERY).matches);
     };
 
     updateViewport();
@@ -499,7 +501,7 @@ export default function App() {
                   {/* Tagline - Dramatic Redesign */}
                   <motion.div 
                     className="relative max-w-2xl mx-auto px-4"
-                    initial={{ opacity: 0, ...axisOffset(-5) }}
+                    initial={{ opacity: 0, ...axisOffset(-5, { directional: false }) }}
                     animate={{ opacity: 1, ...axisOffset(0) }}
                     transition={{ ...elementTransition, delay: 0.11 }}
                   >
@@ -510,7 +512,7 @@ export default function App() {
                       {/* Main dramatic text */}
                       <motion.p 
                         className="text-xl sm:text-2xl md:text-3xl tracking-tight leading-tight"
-                        initial={{ opacity: 0, ...axisOffset(-5) }}
+                        initial={{ opacity: 0, ...axisOffset(-5, { directional: false }) }}
                         animate={{ opacity: 1, ...axisOffset(0) }}
                         transition={{ ...elementTransition, delay: 0.16 }}
                       >
@@ -530,7 +532,7 @@ export default function App() {
                       {/* Subtle hint text */}
                       <motion.p
                         className="text-sm sm:text-base text-[#24523B]/70 font-semibold tracking-tight"
-                        initial={{ opacity: 0, ...axisOffset(-4) }}
+                        initial={{ opacity: 0, ...axisOffset(-4, { directional: false }) }}
                         animate={{ opacity: 1, ...axisOffset(0) }}
                         transition={{ ...elementTransition, delay: 0.22 }}
                       >
